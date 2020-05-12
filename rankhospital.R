@@ -1,6 +1,5 @@
-library(dplyr)
 ##This function is used to find the best hospital in a state
-best<- function(state,outcome){
+rankhospital<- function(state,outcome, num="best"){
     #Reading the Outcome data located in the working directory
     data<-read.csv("outcome-of-care-measures.csv", colClasses ="character")
     #Checking whether entered state and outcome are valid
@@ -26,8 +25,14 @@ best<- function(state,outcome){
         stop("invalid outcome")
     }
     state_splitlist<- splitlist[[state]]
-    lowest_rate<- state_splitlist[order(as.numeric(state_splitlist[[3]])),]
-    # lowest_rate_alphabetic<- lowest_rate[order(lowest_rate[[1]]),]
-    lowest_rate[1,1]
-    
+    lowest_rate<- state_splitlist[order(as.numeric(state_splitlist[[3]]), state_splitlist[[1]]),]
+    ranked<- data.frame(lowest_rate,rank=1:nrow(lowest_rate))
+    if (identical(num,"best"))
+        ranked[1,1]
+    else if (identical(num, "worst")){
+        lowest_rate<- state_splitlist[order(as.numeric(state_splitlist[[3]]), state_splitlist[[1]], na.last = NA, decreasing = FALSE),]
+        ranked<- data.frame(lowest_rate,rank=1:nrow(lowest_rate))
+        ranked[nrow(ranked),1 ]
+    }
+    else ranked[num, 1]
 }
