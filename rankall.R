@@ -21,7 +21,7 @@ rankall <- function(outcome, num="best"){
         stop("invalid outcome")
     }
     for (i in 1:length(states)){
-        state_splitlist<- splitlist[[states[1]]]
+        state_splitlist<- splitlist[[states[i]]]
         lowest_rate<- state_splitlist[order(as.numeric(state_splitlist[[3]]), state_splitlist[[1]]),]
         ranked<- data.frame(lowest_rate,rank=1:nrow(lowest_rate))
         if (identical(num,"best"))
